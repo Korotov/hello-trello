@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>👋 HelloTrello</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
   {% set css %}
     {% include "style.css" %}
   {% endset %}
@@ -14,14 +15,13 @@
 <body>
   <div class="tint">
     <header>
-      <h1>HelloTrello!</h1>
-      <p>
-        This site is populated with content from a public <a href="{{ site.trello_board }}">Trello board</a>. Every deployment pulls the  content from the Trello API and generates the site's HTML at build time on <a href="https://netlify.com{{ site.utm }}">Netlify</a>.
-      </p>
+      {% markdown %}
+        {{- trello.description | safe }}
+      {% endmarkdown %}
     </header>
   </div>
   <main>
-    {% for card in trello %}
+    {% for card in trello.sections %}
     <section>
       <h2>{{ card.name }}</h2>
       <div>

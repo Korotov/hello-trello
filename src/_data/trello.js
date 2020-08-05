@@ -4,18 +4,20 @@ const fetch = require('node-fetch');
 // With public fallbacks for happier onboarding
 require('dotenv').config();
 const {
-  TRELLO_BOARD_URL='https://trello.com/b/Zzc0USwZ/hellotrello',
-  TRELLO_LIST_ID='5e98325d6d6bd120f2b7395f',
+  TRELLO_BOARD_URL = 'https://trello.com/b/lGbE0eJQ/devsite',
+  TRELLO_LIST_ID = '5f2414bd77907068c9ea2ca3',
   BRANCH } = process.env;
 
 
 module.exports = () => {
 
-  // Fetch the JSON data about this board
+  // Fetch the JSON data about this board e
   return fetch(TRELLO_BOARD_URL + '.json')
     .then(res => res.json())
     .then(json => {
-
+      //Add site data from trello to object
+      let siteData = {};
+      siteData.description = json.desc;
       // Just focus on the cards which are in the list we want
       // and do not have a closed status
       let contentCards = json.cards.filter(card => {
@@ -33,13 +35,14 @@ module.exports = () => {
 
       // If a card has an attachment, add it as an image in the descriotion markdown
       contextCards.forEach(card => {
-        if(card.attachments.length) {
+        if (card.attachments.length) {
           card.name = "";
           card.desc = card.desc + `\n![${card.name}](${card.attachments[0].url} '${card.name}')`;
         }
       })
-
+      // Add cards to siteData
+      siteData.sections = contextCards;
       // return our data
-      return contextCards;
-  });
+      return siteData;
+    });
 };
